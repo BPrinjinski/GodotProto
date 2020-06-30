@@ -1,0 +1,2 @@
+# GodotProto
+Godot learning exercises
