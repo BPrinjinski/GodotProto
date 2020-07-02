@@ -2,9 +2,11 @@ extends KinematicBody2D
 
 const GRAVITY = 220
 const TERM_VELOCITY = 600
-const ACCELERATION = 300
-const MAX_SPEED = 200
+const ACCELERATION = 500
+const MAX_SPEED = 100
 const FRICTION = 800
+const JUMP_MAX = .2
+const JUMP_POWER = 18
 
 enum {
 	IDLE,
@@ -18,6 +20,9 @@ enum {
 
 var state = IDLE
 var velocity = Vector2.ZERO
+
+var can_jump = false
+var jump_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,17 +43,31 @@ func _physics_process(delta):
 		if(velocity.y > 0):
 			state = FALL
 	
+	if(Input.is_action_pressed("ui_space")):
+		if((state == IDLE || state == MOVE) && can_jump):
+			state = JUMP
+			can_jump = false
+			jump_time = 0
+	
 	match state:
 		IDLE:
-			pass
+			if(!Input.is_action_pressed("ui_space")):
+				can_jump = true
+			idle_state(delta)
 		MOVE:
+			if(!Input.is_action_pressed("ui_space")):
+				can_jump = true
 			move_state(delta)
 		JUMP:
-			pass
+			if(Input.is_action_pressed("ui_space") && jump_time < JUMP_MAX):
+				velocity.y -= JUMP_POWER
+				jump_time += delta
+			else:
+				state = FALL
 		FALL:
 			move_state(delta)
 	
-	velocity = move_and_slide(velocity)
+	velocity = move_and_slide(velocity, Vector2(0,-1))
 
 func move_state(delta):
 	var input_vector = Vector2.ZERO
@@ -58,4 +77,10 @@ func move_state(delta):
 	if(input_vector.x != 0):
 		velocity.x = move_toward(velocity.x, input_vector.x * MAX_SPEED, ACCELERATION * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+		apply_friction(delta)
+
+func idle_state(delta):
+	apply_friction(delta)
+	
+func apply_friction(delta):
+	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
