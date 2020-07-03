@@ -1,23 +1,29 @@
 extends KinematicBody2D
 
-const GRAVITY = 220
-const TERM_VELOCITY = 600
-const ACCELERATION = 500
+const GRAVITY = 320
+const TERM_VELOCITY = 800
+const ACCELERATION = 600
 const MAX_SPEED = 100
 const FRICTION = 800
-const JUMP_MAX = .2
+const JUMP_MAX = .16
 const JUMP_POWER = 18
 
 enum {
 	IDLE,
 	MOVE,
 	JUMP,
+	WALLJUMP,
 	FALL,
 	CLING,
 	SLIDE,
 	BRACE
 }
 
+onready var animationPlayer = $AnimationPlayer
+onready var animationTree = $AnimationTree
+onready var animationState = animationTree.get("parameters/playback")
+
+var faceLeft = false
 var state = IDLE
 var velocity = Vector2.ZERO
 
@@ -26,7 +32,7 @@ var jump_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	animationTree.active = true;
 
 func _physics_process(delta):
 	if(velocity.y > TERM_VELOCITY):
@@ -34,11 +40,23 @@ func _physics_process(delta):
 	else:
 		velocity.y = (velocity.y + (GRAVITY * delta)) 
 	
+	var horiz_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	
 	if(is_on_floor()):
-		if(Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left") == 0):
+		if(horiz_input == 0):
 			state = IDLE
+			if(faceLeft):
+				animationState.travel("IdleLeft")
+			else:
+				animationState.travel("IdleRight")
 		else:
 			state = MOVE
+			if(horiz_input > 0):
+				faceLeft = false
+				animationState.travel("RunRight")
+			else:
+				faceLeft = true
+				animationState.travel("RunLeft")
 	else:
 		if(velocity.y > 0):
 			state = FALL
@@ -73,6 +91,11 @@ func move_state(delta):
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector = input_vector.normalized()
+	
+	if(input_vector.x < 0):
+		faceLeft = true
+	elif(input_vector.x > 0):
+		faceLeft = false
 	
 	if(input_vector.x != 0):
 		velocity.x = move_toward(velocity.x, input_vector.x * MAX_SPEED, ACCELERATION * delta)
