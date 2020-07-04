@@ -1,10 +1,68 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Player/adventurer-v1.5-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 6.27316, 14.1665 )
+extents = Vector2( 6, 14 )
+
+[sub_resource type="Animation" id=28]
+resource_name = "FallLeft"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 22, 23 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=29]
+resource_name = "FallRight"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 22, 23 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "IdleLeft"
@@ -33,18 +91,6 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ true ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("CollisionShape2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( 0, 3.5 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -75,20 +121,64 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("CollisionShape2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
+
+[sub_resource type="Animation" id=4]
+resource_name = "JumpLeft"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 14, 15, 16, 17 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( 0, 3.5 ) ]
+"update": 1,
+"values": [ true ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=5]
+resource_name = "JumpRight"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 14, 15, 16, 17 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=6]
 resource_name = "RunLeft"
 length = 0.6
 loop = true
@@ -116,20 +206,8 @@ tracks/1/keys = {
 "update": 1,
 "values": [ true ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("CollisionShape2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( -3.5, 3.5 ) ]
-}
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=7]
 resource_name = "RunRight"
 length = 0.6
 loop = true
@@ -157,30 +235,34 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("CollisionShape2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( 3.5, 3.5 ) ]
-}
 
-[sub_resource type="AnimationNodeAnimation" id=4]
+[sub_resource type="AnimationNodeAnimation" id=30]
+animation = "FallLeft"
+
+[sub_resource type="AnimationNodeAnimation" id=31]
+animation = "FallRight"
+
+[sub_resource type="AnimationNodeAnimation" id=8]
 animation = "IdleLeft"
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=9]
 animation = "IdleRight"
 
-[sub_resource type="AnimationNodeAnimation" id=12]
+[sub_resource type="AnimationNodeAnimation" id=22]
+animation = "JumpLeft"
+
+[sub_resource type="AnimationNodeAnimation" id=23]
+animation = "JumpRight"
+
+[sub_resource type="AnimationNodeAnimation" id=10]
 animation = "RunLeft"
 
-[sub_resource type="AnimationNodeAnimation" id=13]
+[sub_resource type="AnimationNodeAnimation" id=11]
 animation = "RunRight"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=12]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=13]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=14]
 
@@ -194,23 +276,51 @@ animation = "RunRight"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=19]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=20]
+[sub_resource type="AnimationNodeStateMachineTransition" id=24]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=21]
+[sub_resource type="AnimationNodeStateMachineTransition" id=25]
 
-[sub_resource type="AnimationNodeStateMachine" id=8]
-states/IdleLeft/node = SubResource( 4 )
-states/IdleLeft/position = Vector2( 167, 71 )
-states/IdleRight/node = SubResource( 5 )
-states/IdleRight/position = Vector2( 423, 71 )
-states/RunLeft/node = SubResource( 12 )
-states/RunLeft/position = Vector2( 167, 173 )
-states/RunRight/node = SubResource( 13 )
-states/RunRight/position = Vector2( 423, 173 )
-transitions = [ "RunLeft", "RunRight", SubResource( 14 ), "RunRight", "RunLeft", SubResource( 15 ), "IdleLeft", "RunLeft", SubResource( 16 ), "IdleLeft", "RunRight", SubResource( 17 ), "RunLeft", "IdleLeft", SubResource( 18 ), "IdleRight", "RunLeft", SubResource( 19 ), "IdleRight", "RunRight", SubResource( 20 ), "RunRight", "IdleRight", SubResource( 21 ) ]
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=32]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=33]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=34]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=35]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=36]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=37]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=38]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=39]
+
+[sub_resource type="AnimationNodeStateMachine" id=20]
+states/FallLeft/node = SubResource( 30 )
+states/FallLeft/position = Vector2( 393, 171 )
+states/FallRight/node = SubResource( 31 )
+states/FallRight/position = Vector2( 937, 171 )
+states/IdleLeft/node = SubResource( 8 )
+states/IdleLeft/position = Vector2( 500, 30 )
+states/IdleRight/node = SubResource( 9 )
+states/IdleRight/position = Vector2( 776, 30 )
+states/JumpLeft/node = SubResource( 22 )
+states/JumpLeft/position = Vector2( 125, 171 )
+states/JumpRight/node = SubResource( 23 )
+states/JumpRight/position = Vector2( 1209, 171 )
+states/RunLeft/node = SubResource( 10 )
+states/RunLeft/position = Vector2( 500, 357 )
+states/RunRight/node = SubResource( 11 )
+states/RunRight/position = Vector2( 776, 357 )
+transitions = [ "RunLeft", "RunRight", SubResource( 12 ), "RunRight", "RunLeft", SubResource( 13 ), "IdleLeft", "RunLeft", SubResource( 14 ), "IdleLeft", "RunRight", SubResource( 15 ), "RunLeft", "IdleLeft", SubResource( 16 ), "IdleRight", "RunLeft", SubResource( 17 ), "IdleRight", "RunRight", SubResource( 18 ), "RunRight", "IdleRight", SubResource( 19 ), "IdleRight", "JumpRight", SubResource( 24 ), "RunRight", "JumpRight", SubResource( 25 ), "IdleLeft", "JumpLeft", SubResource( 26 ), "RunLeft", "JumpLeft", SubResource( 27 ), "JumpLeft", "FallLeft", SubResource( 32 ), "FallLeft", "IdleLeft", SubResource( 33 ), "FallLeft", "RunLeft", SubResource( 34 ), "JumpRight", "FallRight", SubResource( 35 ), "FallRight", "IdleRight", SubResource( 36 ), "FallRight", "RunRight", SubResource( 37 ), "RunRight", "FallRight", SubResource( 38 ), "RunLeft", "FallLeft", SubResource( 39 ) ]
 start_node = "IdleRight"
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=9]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=21]
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -221,7 +331,7 @@ texture = ExtResource( 1 )
 flip_h = true
 vframes = 16
 hframes = 7
-frame = 3
+frame = 22
 region_enabled = true
 region_rect = Rect2( 0, 0, 350, 592 )
 
@@ -230,12 +340,16 @@ position = Vector2( 0, 3.5 )
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FallLeft = SubResource( 28 )
+anims/FallRight = SubResource( 29 )
 anims/IdleLeft = SubResource( 2 )
 anims/IdleRight = SubResource( 3 )
-anims/RunLeft = SubResource( 10 )
-anims/RunRight = SubResource( 11 )
+anims/JumpLeft = SubResource( 4 )
+anims/JumpRight = SubResource( 5 )
+anims/RunLeft = SubResource( 6 )
+anims/RunRight = SubResource( 7 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 8 )
+tree_root = SubResource( 20 )
 anim_player = NodePath("../AnimationPlayer")
-parameters/playback = SubResource( 9 )
+parameters/playback = SubResource( 21 )

@@ -77,12 +77,18 @@ func _physics_process(delta):
 				can_jump = true
 			move_state(delta)
 		JUMP:
+			if(faceLeft):
+				animationState.travel("JumpLeft")
+			else:
+				animationState.travel("JumpRight")
 			if(Input.is_action_pressed("ui_space") && jump_time < JUMP_MAX):
 				velocity.y -= JUMP_POWER
 				jump_time += delta
-			else:
-				state = FALL
 		FALL:
+			if(faceLeft):
+				animationState.travel("FallLeft")
+			else:
+				animationState.travel("FallRight")
 			move_state(delta)
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
