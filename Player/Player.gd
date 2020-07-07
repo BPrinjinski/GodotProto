@@ -27,6 +27,7 @@ var faceLeft = false
 var state = IDLE
 var velocity = Vector2.ZERO
 
+var on_ground = false
 var can_jump = false
 var jump_time = 0
 
@@ -34,15 +35,10 @@ var jump_time = 0
 func _ready():
 	animationTree.active = true;
 
-func _physics_process(delta):
-	if(velocity.y > TERM_VELOCITY):
-		velocity.y = TERM_VELOCITY
-	else:
-		velocity.y = (velocity.y + (GRAVITY * delta)) 
-	
+func _physics_process(delta):	
 	var horiz_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	
-	if(is_on_floor()):
+	if(on_ground && state != JUMP):
 		if(horiz_input == 0):
 			state = IDLE
 			if(faceLeft):
@@ -51,12 +47,6 @@ func _physics_process(delta):
 				animationState.travel("IdleRight")
 		else:
 			state = MOVE
-			if(horiz_input > 0):
-				faceLeft = false
-				animationState.travel("RunRight")
-			else:
-				faceLeft = true
-				animationState.travel("RunLeft")
 	else:
 		if(velocity.y > 0):
 			state = FALL
@@ -76,6 +66,10 @@ func _physics_process(delta):
 			if(!Input.is_action_pressed("ui_space")):
 				can_jump = true
 			move_state(delta)
+			if(faceLeft):
+				animationState.travel("RunLeft")
+			else:
+				animationState.travel("RunRight")
 		JUMP:
 			if(faceLeft):
 				animationState.travel("JumpLeft")
@@ -85,13 +79,20 @@ func _physics_process(delta):
 				velocity.y -= JUMP_POWER
 				jump_time += delta
 		FALL:
+			move_state(delta)
 			if(faceLeft):
 				animationState.travel("FallLeft")
 			else:
 				animationState.travel("FallRight")
-			move_state(delta)
+	
+	if(velocity.y > TERM_VELOCITY):
+		velocity.y = TERM_VELOCITY
+	else:
+		velocity.y = (velocity.y + (GRAVITY * delta))
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
+	
+	on_ground = test_move(transform, Vector2(0,1))
 
 func move_state(delta):
 	var input_vector = Vector2.ZERO
