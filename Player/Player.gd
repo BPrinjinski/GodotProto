@@ -1,12 +1,14 @@
 extends KinematicBody2D
 
 const GRAVITY = 320
+const SLIDE_SPEED = 30
 const TERM_VELOCITY = 800
 const ACCELERATION = 600
 const MAX_SPEED = 100
 const FRICTION = 800
 const JUMP_MAX = .16
 const JUMP_POWER = 18
+const WALLJUMP_MAX = 50
 
 enum {
 	IDLE,
@@ -19,6 +21,9 @@ enum {
 	BRACE
 }
 
+onready var leftWallRay = $LeftWallRay
+onready var rightWallRay = $RightWallRay
+
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
@@ -28,8 +33,11 @@ var state = IDLE
 var velocity = Vector2.ZERO
 
 var on_ground = false
+var on_wall_left = false
+var on_wall_right = false
 var can_jump = false
 var jump_time = 0
+var walljump_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -37,6 +45,7 @@ func _ready():
 
 func _physics_process(delta):	
 	var horiz_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	var jump_input = Input.is_action_pressed("ui_space")
 	
 	if(on_ground && state != JUMP):
 		if(horiz_input == 0):
@@ -48,14 +57,19 @@ func _physics_process(delta):
 		else:
 			state = MOVE
 	else:
-		if(velocity.y > 0):
+		if((on_wall_left || on_wall_right) && state != JUMP):
+			state = SLIDE
+		elif(velocity.y > 0):
 			state = FALL
 	
-	if(Input.is_action_pressed("ui_space")):
+	if(jump_input):
 		if((state == IDLE || state == MOVE) && can_jump):
 			state = JUMP
 			can_jump = false
 			jump_time = 0
+		if(state == SLIDE):
+			state = WALLJUMP
+			walljump_time = 0
 	
 	match state:
 		IDLE:
@@ -84,15 +98,23 @@ func _physics_process(delta):
 				animationState.travel("FallLeft")
 			else:
 				animationState.travel("FallRight")
+		SLIDE:
+			slide_state(delta)
+			if(on_wall_left):
+				animationState.travel("SlideLeft")
+			else:
+				animationState.travel("SlideRight")
 	
 	if(velocity.y > TERM_VELOCITY):
 		velocity.y = TERM_VELOCITY
-	else:
+	elif(state != SLIDE):
 		velocity.y = (velocity.y + (GRAVITY * delta))
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
 	
 	on_ground = test_move(transform, Vector2(0,1))
+	on_wall_left = leftWallRay.is_colliding()
+	on_wall_right = rightWallRay.is_colliding()
 
 func move_state(delta):
 	var input_vector = Vector2.ZERO
@@ -111,6 +133,20 @@ func move_state(delta):
 
 func idle_state(delta):
 	apply_friction(delta)
+
+func slide_state(delta):
+	velocity.y = SLIDE_SPEED
+	velocity.x = 0
 	
+	if(on_wall_left && Input.is_action_pressed("ui_right")):
+		state = FALL
+		velocity.x = ACCELERATION * delta
+	elif(on_wall_right && Input.is_action_pressed("ui_left")):
+		state = FALL
+		velocity.x = -1 * ACCELERATION * delta
+
+func walljump_state(delta):
+	pass
+
 func apply_friction(delta):
 	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)

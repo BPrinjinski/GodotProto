@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=52 format=2]
 
 [ext_resource path="res://Player/adventurer-v1.5-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.gd" type="Script" id=2]
@@ -230,37 +230,93 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="AnimationNodeAnimation" id=10]
-animation = "FallLeft"
+[sub_resource type="Animation" id=10]
+resource_name = "SlideLeft"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 79, 80 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="AnimationNodeAnimation" id=11]
-animation = "FallRight"
+[sub_resource type="Animation" id=11]
+resource_name = "SlideRight"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 79, 80 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:flip_h")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="AnimationNodeAnimation" id=12]
-animation = "IdleLeft"
+animation = "FallLeft"
 
 [sub_resource type="AnimationNodeAnimation" id=13]
-animation = "IdleRight"
+animation = "FallRight"
 
 [sub_resource type="AnimationNodeAnimation" id=14]
-animation = "JumpLeft"
+animation = "IdleLeft"
 
 [sub_resource type="AnimationNodeAnimation" id=15]
-animation = "JumpRight"
+animation = "IdleRight"
 
 [sub_resource type="AnimationNodeAnimation" id=16]
-animation = "RunLeft"
+animation = "JumpLeft"
 
 [sub_resource type="AnimationNodeAnimation" id=17]
+animation = "JumpRight"
+
+[sub_resource type="AnimationNodeAnimation" id=18]
+animation = "RunLeft"
+
+[sub_resource type="AnimationNodeAnimation" id=19]
 animation = "RunRight"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=18]
+[sub_resource type="AnimationNodeAnimation" id=20]
+animation = "SlideLeft"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=19]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=20]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=21]
+[sub_resource type="AnimationNodeAnimation" id=21]
+animation = "SlideRight"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=22]
 
@@ -294,28 +350,52 @@ animation = "RunRight"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=37]
 
-[sub_resource type="AnimationNodeStateMachine" id=38]
-states/FallLeft/node = SubResource( 10 )
-states/FallLeft/position = Vector2( 393, 171 )
-states/FallRight/node = SubResource( 11 )
-states/FallRight/position = Vector2( 937, 171 )
-states/IdleLeft/node = SubResource( 12 )
-states/IdleLeft/position = Vector2( 500, 30 )
-states/IdleRight/node = SubResource( 13 )
-states/IdleRight/position = Vector2( 776, 30 )
-states/JumpLeft/node = SubResource( 14 )
-states/JumpLeft/position = Vector2( 125, 171 )
-states/JumpRight/node = SubResource( 15 )
-states/JumpRight/position = Vector2( 1209, 171 )
-states/RunLeft/node = SubResource( 16 )
-states/RunLeft/position = Vector2( 500, 357 )
-states/RunRight/node = SubResource( 17 )
-states/RunRight/position = Vector2( 776, 357 )
-transitions = [ "RunLeft", "RunRight", SubResource( 18 ), "RunRight", "RunLeft", SubResource( 19 ), "IdleLeft", "RunLeft", SubResource( 20 ), "IdleLeft", "RunRight", SubResource( 21 ), "RunLeft", "IdleLeft", SubResource( 22 ), "IdleRight", "RunLeft", SubResource( 23 ), "IdleRight", "RunRight", SubResource( 24 ), "RunRight", "IdleRight", SubResource( 25 ), "IdleRight", "JumpRight", SubResource( 26 ), "RunRight", "JumpRight", SubResource( 27 ), "IdleLeft", "JumpLeft", SubResource( 28 ), "RunLeft", "JumpLeft", SubResource( 29 ), "JumpLeft", "FallLeft", SubResource( 30 ), "FallLeft", "IdleLeft", SubResource( 31 ), "FallLeft", "RunLeft", SubResource( 32 ), "JumpRight", "FallRight", SubResource( 33 ), "FallRight", "IdleRight", SubResource( 34 ), "FallRight", "RunRight", SubResource( 35 ), "RunRight", "FallRight", SubResource( 36 ), "RunLeft", "FallLeft", SubResource( 37 ) ]
-start_node = "IdleRight"
-graph_offset = Vector2( 0, 78.1885 )
+[sub_resource type="AnimationNodeStateMachineTransition" id=38]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=39]
+[sub_resource type="AnimationNodeStateMachineTransition" id=39]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=40]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=41]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=42]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=43]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=44]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=45]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=46]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=47]
+
+[sub_resource type="AnimationNodeStateMachine" id=48]
+states/FallLeft/node = SubResource( 12 )
+states/FallLeft/position = Vector2( 215, 171 )
+states/FallRight/node = SubResource( 13 )
+states/FallRight/position = Vector2( 1146, 171 )
+states/IdleLeft/node = SubResource( 14 )
+states/IdleLeft/position = Vector2( 500, 30 )
+states/IdleRight/node = SubResource( 15 )
+states/IdleRight/position = Vector2( 776, 30 )
+states/JumpLeft/node = SubResource( 16 )
+states/JumpLeft/position = Vector2( 56, 171 )
+states/JumpRight/node = SubResource( 17 )
+states/JumpRight/position = Vector2( 1322, 171 )
+states/RunLeft/node = SubResource( 18 )
+states/RunLeft/position = Vector2( 500, 357 )
+states/RunRight/node = SubResource( 19 )
+states/RunRight/position = Vector2( 776, 357 )
+states/SlideLeft/node = SubResource( 20 )
+states/SlideLeft/position = Vector2( 398, 171 )
+states/SlideRight/node = SubResource( 21 )
+states/SlideRight/position = Vector2( 929, 171 )
+transitions = [ "RunLeft", "RunRight", SubResource( 22 ), "RunRight", "RunLeft", SubResource( 23 ), "IdleLeft", "RunLeft", SubResource( 24 ), "IdleLeft", "RunRight", SubResource( 25 ), "RunLeft", "IdleLeft", SubResource( 26 ), "IdleRight", "RunLeft", SubResource( 27 ), "IdleRight", "RunRight", SubResource( 28 ), "RunRight", "IdleRight", SubResource( 29 ), "IdleRight", "JumpRight", SubResource( 30 ), "RunRight", "JumpRight", SubResource( 31 ), "IdleLeft", "JumpLeft", SubResource( 32 ), "RunLeft", "JumpLeft", SubResource( 33 ), "JumpLeft", "FallLeft", SubResource( 34 ), "FallLeft", "IdleLeft", SubResource( 35 ), "FallLeft", "RunLeft", SubResource( 36 ), "JumpRight", "FallRight", SubResource( 37 ), "FallRight", "IdleRight", SubResource( 38 ), "FallRight", "RunRight", SubResource( 39 ), "RunRight", "FallRight", SubResource( 40 ), "RunLeft", "FallLeft", SubResource( 41 ), "FallLeft", "SlideLeft", SubResource( 42 ), "SlideLeft", "FallLeft", SubResource( 43 ), "SlideLeft", "IdleLeft", SubResource( 44 ), "SlideRight", "IdleRight", SubResource( 45 ), "SlideRight", "FallRight", SubResource( 46 ), "FallRight", "SlideRight", SubResource( 47 ) ]
+start_node = "IdleRight"
+graph_offset = Vector2( 0, 65.7332 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=49]
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -326,7 +406,7 @@ texture = ExtResource( 1 )
 flip_h = true
 vframes = 16
 hframes = 7
-frame = 8
+frame = 80
 region_enabled = true
 region_rect = Rect2( 0, 0, 350, 592 )
 
@@ -343,8 +423,18 @@ anims/JumpLeft = SubResource( 6 )
 anims/JumpRight = SubResource( 7 )
 anims/RunLeft = SubResource( 8 )
 anims/RunRight = SubResource( 9 )
+anims/SlideLeft = SubResource( 10 )
+anims/SlideRight = SubResource( 11 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 38 )
+tree_root = SubResource( 48 )
 anim_player = NodePath("../AnimationPlayer")
-parameters/playback = SubResource( 39 )
+parameters/playback = SubResource( 49 )
+
+[node name="LeftWallRay" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( -7, 0 )
+
+[node name="RightWallRay" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 7, 0 )
