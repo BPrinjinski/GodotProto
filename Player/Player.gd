@@ -8,7 +8,8 @@ const MAX_SPEED = 100
 const FRICTION = 800
 const JUMP_MAX = .16
 const JUMP_POWER = 18
-const WALLJUMP_MAX = 50
+const WALLJUMP_MAX = .30
+const WALLJUMP_POWER = 80
 
 enum {
 	IDLE,
@@ -70,6 +71,10 @@ func _physics_process(delta):
 		if(state == SLIDE):
 			state = WALLJUMP
 			walljump_time = 0
+			if(on_wall_left):
+				faceLeft = false
+			else:
+				faceLeft = true
 	
 	match state:
 		IDLE:
@@ -104,6 +109,12 @@ func _physics_process(delta):
 				animationState.travel("SlideLeft")
 			else:
 				animationState.travel("SlideRight")
+		WALLJUMP:
+			walljump_state(delta)
+			if(faceLeft):
+				animationState.travel("JumpLeft")
+			else:
+				animationState.travel("JumpRight")
 	
 	if(velocity.y > TERM_VELOCITY):
 		velocity.y = TERM_VELOCITY
@@ -146,7 +157,16 @@ func slide_state(delta):
 		velocity.x = -1 * ACCELERATION * delta
 
 func walljump_state(delta):
-	pass
+	if(walljump_time < WALLJUMP_MAX):
+		velocity.x = MAX_SPEED
+		if(faceLeft):
+			velocity.x *= -1
+		velocity.y = WALLJUMP_POWER * -1
+		
+		walljump_time += delta
+	else:
+		state = FALL
+	
 
 func apply_friction(delta):
 	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
