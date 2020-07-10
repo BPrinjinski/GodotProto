@@ -24,6 +24,8 @@ enum {
 
 onready var leftWallRay = $LeftWallRay
 onready var rightWallRay = $RightWallRay
+onready var groundRayLeft = $GroundRayLeft
+onready var groundRayRight = $GroundRayRight
 
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
@@ -118,12 +120,34 @@ func _physics_process(delta):
 	
 	if(velocity.y > TERM_VELOCITY):
 		velocity.y = TERM_VELOCITY
-	elif(state != SLIDE):
+	elif(!on_ground && state != SLIDE):
 		velocity.y = (velocity.y + (GRAVITY * delta))
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
 	
 	on_ground = test_move(transform, Vector2(0,1))
+	
+	var groundLoc = 0
+	var groundDist = 0
+	var rayOrigin = 0
+	
+	if(on_ground && (state == FALL || state ==  JUMP)):
+		#translate(Vector2(0, -4))
+		if(groundRayLeft.is_colliding()):
+			groundLoc = groundRayLeft.get_collision_point().y
+			rayOrigin = groundRayLeft.global_transform.origin.y
+			groundDist = 15 - (groundLoc - rayOrigin)
+			translate(Vector2(0, -1 * groundDist))
+		elif(groundRayRight.is_colliding()):
+			groundLoc = groundRayRight.get_collision_point().y
+			rayOrigin = groundRayRight.global_transform.origin.y
+			groundDist = 15 - (groundLoc - rayOrigin)
+			translate(Vector2(0, -1 * groundDist))
+		if(faceLeft):
+			animationState.travel("IdleLeft")
+		else:
+			animationState.travel("IdleRight")
+	
 	on_wall_left = leftWallRay.is_colliding()
 	on_wall_right = rightWallRay.is_colliding()
 
@@ -143,6 +167,7 @@ func move_state(delta):
 		apply_friction(delta)
 
 func idle_state(delta):
+	velocity.y = 0
 	apply_friction(delta)
 
 func slide_state(delta):
