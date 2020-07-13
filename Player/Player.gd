@@ -20,6 +20,7 @@ enum {
 	WALLJUMP,
 	FALL,
 	CLING,
+	CLIMB,
 	SLIDE,
 	BRACE
 }
@@ -70,7 +71,9 @@ func _physics_process(delta):
 		else:
 			state = MOVE
 	else:
-		if(((on_wall_left && faceLeft) || (on_wall_right && !faceLeft)) && state == FALL && can_cling && !clingRay.is_colliding()):
+		if(state == CLIMB):
+			pass
+		elif(((on_wall_left && faceLeft) || (on_wall_right && !faceLeft)) && state == FALL && can_cling && !clingRay.is_colliding()):
 			state = CLING
 		elif((on_wall_left || on_wall_right) && state != JUMP && state != CLING):
 			state = SLIDE
@@ -135,10 +138,16 @@ func _physics_process(delta):
 				animationState.travel("ClingLeft")
 			else:
 				animationState.travel("ClingRight")
+		CLIMB:
+			climb_state(delta)
+			if(faceLeft):
+				animationState.travel("ClimbLeft")
+			else:
+				animationState.travel("ClimbRight")
 	
 	if(velocity.y > TERM_VELOCITY):
 		velocity.y = TERM_VELOCITY
-	elif(!on_ground && state != SLIDE && state != CLING):
+	elif(!on_ground && state != SLIDE && state != CLING && state != CLIMB):
 		velocity.y = (velocity.y + (GRAVITY * delta))
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
@@ -229,6 +238,29 @@ func cling_state(delta):
 		state = FALL
 		can_cling = false
 		can_cling_timer = .25
+	if(Input.is_action_just_pressed("ui_up")):
+		state = CLIMB
+
+func climb_state(delta):
+	pass
 
 func apply_friction(delta):
 	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+
+func ClimbLeftFinished():
+	translate(Vector2(-2, 0))
+	groundRayLeft.force_raycast_update()
+	while(groundRayLeft.is_colliding()):
+		translate(Vector2(0, -1))
+		groundRayLeft.force_raycast_update()
+	
+	state = IDLE
+
+func ClimbRightFinished():
+	translate(Vector2(2, 0))
+	groundRayRight.force_raycast_update()
+	while(groundRayRight.is_colliding()):
+		translate(Vector2(0, -1))
+		groundRayRight.force_raycast_update()
+	
+	state = IDLE
