@@ -70,7 +70,7 @@ func _physics_process(delta):
 		else:
 			state = MOVE
 	else:
-		if((on_wall_left || on_wall_right) && state == FALL && can_cling && !clingRay.is_colliding()):
+		if(((on_wall_left && faceLeft) || (on_wall_right && !faceLeft)) && state == FALL && can_cling && !clingRay.is_colliding()):
 			state = CLING
 		elif((on_wall_left || on_wall_right) && state != JUMP && state != CLING):
 			state = SLIDE
@@ -203,9 +203,11 @@ func slide_state(delta):
 	if(on_wall_left && Input.is_action_pressed("ui_right")):
 		state = FALL
 		velocity.x = ACCELERATION * delta
+		faceLeft = false
 	elif(on_wall_right && Input.is_action_pressed("ui_left")):
 		state = FALL
 		velocity.x = -1 * ACCELERATION * delta
+		faceLeft = true
 
 func walljump_state(delta):
 	if(walljump_time < WALLJUMP_MAX):
