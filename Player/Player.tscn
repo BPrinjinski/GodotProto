@@ -806,25 +806,32 @@ tree_root = SubResource( 64 )
 anim_player = NodePath("../AnimationPlayer")
 parameters/playback = SubResource( 65 )
 
-[node name="LeftWallRay" type="RayCast2D" parent="."]
+[node name="Rays" type="Node2D" parent="."]
+
+[node name="LeftWallRay" type="RayCast2D" parent="Rays"]
 enabled = true
 cast_to = Vector2( -7, 0 )
 
-[node name="RightWallRay" type="RayCast2D" parent="."]
+[node name="RightWallRay" type="RayCast2D" parent="Rays"]
 enabled = true
 cast_to = Vector2( 7, 0 )
 
-[node name="GroundRayRight" type="RayCast2D" parent="."]
+[node name="GroundRayRight" type="RayCast2D" parent="Rays"]
 position = Vector2( 6, 3.5 )
 enabled = true
 cast_to = Vector2( 0, 15 )
 
-[node name="GroundRayLeft" type="RayCast2D" parent="."]
+[node name="GroundRayLeft" type="RayCast2D" parent="Rays"]
 position = Vector2( -6, 3.5 )
 enabled = true
 cast_to = Vector2( 0, 15 )
 
-[node name="ClingRay" type="RayCast2D" parent="."]
+[node name="ClingRay" type="RayCast2D" parent="Rays"]
 position = Vector2( -7, -38.5 )
 enabled = true
 cast_to = Vector2( 0, 28 )
+
+[node name="SkipRay" type="RayCast2D" parent="Rays"]
+position = Vector2( -7, 18.5 )
+enabled = true
+cast_to = Vector2( -8, 0 )

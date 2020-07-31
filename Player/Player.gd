@@ -8,10 +8,15 @@ const MAX_SPEED = 100
 const FRICTION = 800
 const JUMP_MAX = .16
 const JUMP_POWER = 18
+const COYOTE_TIME_MAX = .1
 const WALLJUMP_MAX = .30
 const WALLJUMP_POWER = 80
 const CLING_RAY_X = 7
 const CLING_RAY_Y = -38.5
+const SKIP_RAY_X = 7
+const SKIP_RAY_Y = 18.5
+const SKIP_RAY_TO_X = 8
+const SKIP_RAY_TO_Y = 0
 
 enum {
 	IDLE,
@@ -25,11 +30,12 @@ enum {
 	BRACE
 }
 
-onready var leftWallRay = $LeftWallRay
-onready var rightWallRay = $RightWallRay
-onready var groundRayLeft = $GroundRayLeft
-onready var groundRayRight = $GroundRayRight
-onready var clingRay = $ClingRay
+onready var leftWallRay = $Rays/LeftWallRay
+onready var rightWallRay = $Rays/RightWallRay
+onready var groundRayLeft = $Rays/GroundRayLeft
+onready var groundRayRight = $Rays/GroundRayRight
+onready var clingRay = $Rays/ClingRay
+onready var skipRay = $Rays/SkipRay
 
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
@@ -46,6 +52,7 @@ var can_jump = false
 var can_cling = true
 var can_cling_timer = 0
 var jump_time = 0
+var coyote_time = 0
 var walljump_time = 0
 
 # Called when the node enters the scene tree for the first time.
@@ -58,10 +65,14 @@ func _physics_process(delta):
 	
 	if(faceLeft):
 		clingRay.transform.origin = Vector2(-1 * CLING_RAY_X, CLING_RAY_Y)
+		skipRay.transform.origin = Vector2(-1 * SKIP_RAY_X, SKIP_RAY_Y)
+		skipRay.cast_to = Vector2(-1 * SKIP_RAY_TO_X, SKIP_RAY_TO_Y)
 	else:
 		clingRay.transform.origin = Vector2(CLING_RAY_X, CLING_RAY_Y)
+		skipRay.transform.origin = Vector2(SKIP_RAY_X, SKIP_RAY_Y)
+		skipRay.cast_to = Vector2(SKIP_RAY_TO_X, SKIP_RAY_TO_Y)
 	
-	if(on_ground && state != JUMP):
+	if(on_ground && state != JUMP ):
 		if(horiz_input == 0):
 			state = IDLE
 			if(faceLeft):
@@ -81,10 +92,14 @@ func _physics_process(delta):
 			state = FALL
 	
 	if(jump_input):
-		if((state == IDLE || state == MOVE) && can_jump):
+		if(!can_jump && coyote_time < COYOTE_TIME_MAX):
+			can_jump = true
+			coyote_time = COYOTE_TIME_MAX
+		if((state == IDLE || state == MOVE || state == FALL) && can_jump):
 			state = JUMP
 			can_jump = false
 			jump_time = 0
+			coyote_time = COYOTE_TIME_MAX
 		if(state == SLIDE):
 			state = WALLJUMP
 			walljump_time = 0
@@ -98,7 +113,14 @@ func _physics_process(delta):
 			if(!Input.is_action_pressed("ui_space")):
 				can_jump = true
 			idle_state(delta)
+			coyote_time = 0
 		MOVE:
+			if(!on_ground):
+				coyote_time += delta
+			else:
+				coyote_time = 0
+			if(horiz_input == 0):
+				coyote_time = COYOTE_TIME_MAX
 			if(!Input.is_action_pressed("ui_space")):
 				can_jump = true
 			move_state(delta)
@@ -145,10 +167,14 @@ func _physics_process(delta):
 			else:
 				animationState.travel("ClimbRight")
 	
+	if(coyote_time >= COYOTE_TIME_MAX  && !on_ground):
+		can_jump = false
+	
 	if(velocity.y > TERM_VELOCITY):
 		velocity.y = TERM_VELOCITY
 	elif(!on_ground && state != SLIDE && state != CLING && state != CLIMB):
-		velocity.y = (velocity.y + (GRAVITY * delta))
+		if(state != MOVE || !skipRay.is_colliding() && coyote_time >= COYOTE_TIME_MAX):
+			velocity.y = (velocity.y + (GRAVITY * delta))
 	
 	velocity = move_and_slide(velocity, Vector2(0,-1))
 	
